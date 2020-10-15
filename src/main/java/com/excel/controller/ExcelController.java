@@ -1,5 +1,6 @@
 package com.excel.controller;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.excel.domain.SalaryType;
+import com.excel.domain.SalaryTypechainOccupant;
+import com.excel.mapper.SalaryMapper;
 import com.excel.service.ExcelService;
 import com.excel.vo.Fruit;
 
@@ -20,17 +24,15 @@ import com.excel.vo.Fruit;
 public class ExcelController {
 	
 	@Autowired
-	ExcelService excelService;
+	private ExcelService excelService;
+	
+	@Autowired
+	private SalaryMapper salaryMapper;
 	
 	@RequestMapping(value = "/downloadExcelFile", method = RequestMethod.POST)
     public String downloadExcelFile(Model model) {
-        String[] names = {"자몽", "애플망고", "멜론", "오렌지"};
-        long[] prices = {5000, 10000, 7000, 6000};
-        int[] quantities = {50, 50, 40, 40};
-        List<Fruit> list = excelService.makeFruitList(names, prices, quantities);
-        
         //엑셀 객체
-        SXSSFWorkbook workbook = excelService.excelFileDownloadProcess(list);
+        SXSSFWorkbook workbook = excelService.excelFileDownloadProcess(new ArrayList<>());
         
         System.out.println(workbook);
         
@@ -43,18 +45,19 @@ public class ExcelController {
 	
 	@RequestMapping(value = "/uploadExcelFile", method = RequestMethod.POST)
 	public String uploadExcelFile(MultipartHttpServletRequest request, Model model) {
+		System.out.println("동작");
 		MultipartFile file = null;
 		Iterator<String> iterator = request.getFileNames();
 		if(iterator.hasNext()) {
 			file = request.getFile(iterator.next());
 		}
 		//파일 이름을 가지고 업로드 진행
-		List<Fruit> list = excelService.uploadExcelFile(file);
+		excelService.uploadExcelFile(file);
 		
-		list.forEach( item -> System.out.println(item));
+		List<SalaryType> list = salaryMapper.selectExcelList();
 		
 		model.addAttribute("list", list);
-		return "jsonView";
+		return "home";
 	}
 
 }
