@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.excel.domain.SalaryType;
-import com.excel.domain.SalaryTypechainOccupant;
-import com.excel.mapper.SalaryMapper;
 import com.excel.service.ExcelService;
 import com.excel.vo.Fruit;
 
@@ -26,18 +22,15 @@ public class ExcelController {
 	@Autowired
 	private ExcelService excelService;
 	
-	@Autowired
-	private SalaryMapper salaryMapper;
-	
 	@RequestMapping(value = "/downloadExcelFile", method = RequestMethod.POST)
     public String downloadExcelFile(Model model) {
         //엑셀 객체
-        SXSSFWorkbook workbook = excelService.excelFileDownloadProcess(new ArrayList<>());
-        
-        System.out.println(workbook);
+//        SXSSFWorkbook workbook = excelService.excelFileDownloadProcess(new ArrayList<>());
+//        
+//        System.out.println(workbook);
         
         model.addAttribute("locale", Locale.KOREA);
-        model.addAttribute("workbook", workbook);//엑셀파일 저장
+//        model.addAttribute("workbook", workbook);//엑셀파일 저장
         model.addAttribute("workbookName", "과일표");//엑셀제목 저장
         
         return "excelDownloadView";
@@ -52,11 +45,11 @@ public class ExcelController {
 			file = request.getFile(iterator.next());
 		}
 		//파일 이름을 가지고 업로드 진행
-		excelService.uploadExcelFile(file);
+//		excelService.uploadExcelFile(file);
 		
-		List<SalaryType> list = salaryMapper.selectExcelList();
+//		List<SalaryType> list = salaryMapper.selectExcelList();
 		
-		model.addAttribute("list", list);
+//		model.addAttribute("list", list);
 		return "home";
 	}
 

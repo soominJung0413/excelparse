@@ -18,12 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.excel.domain.MonthlySalary;
-import com.excel.domain.SalaryTypechainOccupant;
-import com.excel.listener.MappingValueListener;
-import com.excel.mapper.MonthlySalaryMapper;
-import com.excel.mapper.SalaryTypechainOccupantMapper;
 import com.excel.vo.Fruit;
 
 import lombok.extern.log4j.Log4j;
@@ -31,15 +25,6 @@ import lombok.extern.log4j.Log4j;
 @Service
 @Log4j
 public class ExcelService {
-
-	@Autowired
-	private MappingValueListener mappingValueListener;
-	
-	@Autowired
-	private MonthlySalaryMapper monthlySalaryMapper;
-	
-	@Autowired
-	private SalaryTypechainOccupantMapper salaryTypechainOccupantMapper;
 
 	/**
 	 * 여기가 중요함, 엑셀 객체 생성 SXSSFWorkbook
@@ -105,73 +90,73 @@ public class ExcelService {
 	 * @param file 멀티파트 파일 객체
 	 * @return 클래스 리스트
 	 */
-	@Transactional(rollbackFor=Exception.class)
-	public void uploadExcelFile(MultipartFile file) {
-		List<SalaryTypechainOccupant> list = new ArrayList<SalaryTypechainOccupant>();
-		try {
-			// OPCPackage 로 업로드한 파일을 읽어들임
-			OPCPackage opcPackage = OPCPackage.open(file.getInputStream());
-			XSSFWorkbook workbook = new XSSFWorkbook(opcPackage);
-
-			// 첫번째 시트 불러오기
-			XSSFSheet sheet = workbook.getSheetAt(0);
-			Map<String, Integer> salMap = mappingValueListener.getSalaryType();
-			Map<String, Integer> occMap = mappingValueListener.getOccupant();
-
-			for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
-				SalaryTypechainOccupant salaryTypechainOccupant = new SalaryTypechainOccupant();
-				// 첫번째 줄
-				XSSFRow row = sheet.getRow(i);
-
-				if (null == row) {
-					continue;
-				}
-
-				// 해당 행의 두번쨰 열
-				XSSFCell cell = row.getCell(1);
-				if (null != cell && cell.getCellType() == CellType.STRING) {
-					String sType = cell.getStringCellValue();
-					int sNo = salMap.get(sType);
-					salaryTypechainOccupant.setS_no(sNo);
-				}
-				cell = row.getCell(2);
-				;
-				if (null != cell && cell.getCellType() == CellType.STRING) {
-					String oType = cell.getStringCellValue();
-					int oNo = occMap.get(oType);
-					salaryTypechainOccupant.setO_no(oNo);
-				}
-				List<Integer> payments = new ArrayList<>();
-				for (int j = 3; j < row.getLastCellNum() + 1; j++) {
-					cell = row.getCell(j);
-					if (null != cell && cell.getCellType() == CellType.NUMERIC) {
-						int payment = (int) cell.getNumericCellValue();
-						payments.add(payment);
-					}
-				}
-				MonthlySalary monthlySalary = null;
-				if(!payments.isEmpty()) {
-					monthlySalary = monthlySalary.addFields(payments);
-					log.info("================================================"+monthlySalary);
-					monthlySalaryMapper.insert(monthlySalary);
-					
-					int msNo = monthlySalary.getMsNo();
-					salaryTypechainOccupant.setMs_no(msNo);
-					salaryTypechainOccupantMapper.insert(salaryTypechainOccupant);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 생성한 엑셀 워크북을 컨트롤러 에서 받게 해줌
-	 * 
-	 * @param list
-	 * @return
-	 */
-	public SXSSFWorkbook excelFileDownloadProcess(List<Object> list) {
-		return this.makeSimpleExcelWorkBook(list);
-	}
+//	@Transactional(rollbackFor=Exception.class)
+//	public void uploadExcelFile(MultipartFile file) {
+//		List<SalaryTypechainOccupant> list = new ArrayList<SalaryTypechainOccupant>();
+//		try {
+//			// OPCPackage 로 업로드한 파일을 읽어들임
+//			OPCPackage opcPackage = OPCPackage.open(file.getInputStream());
+//			XSSFWorkbook workbook = new XSSFWorkbook(opcPackage);
+//
+//			// 첫번째 시트 불러오기
+//			XSSFSheet sheet = workbook.getSheetAt(0);
+//			Map<String, Integer> salMap = mappingValueListener.getSalaryType();
+//			Map<String, Integer> occMap = mappingValueListener.getOccupant();
+//
+//			for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
+//				SalaryTypechainOccupant salaryTypechainOccupant = new SalaryTypechainOccupant();
+//				// 첫번째 줄
+//				XSSFRow row = sheet.getRow(i);
+//
+//				if (null == row) {
+//					continue;
+//				}
+//
+//				// 해당 행의 두번쨰 열
+//				XSSFCell cell = row.getCell(1);
+//				if (null != cell && cell.getCellType() == CellType.STRING) {
+//					String sType = cell.getStringCellValue();
+//					int sNo = salMap.get(sType);
+//					salaryTypechainOccupant.setS_no(sNo);
+//				}
+//				cell = row.getCell(2);
+//				;
+//				if (null != cell && cell.getCellType() == CellType.STRING) {
+//					String oType = cell.getStringCellValue();
+//					int oNo = occMap.get(oType);
+//					salaryTypechainOccupant.setO_no(oNo);
+//				}
+//				List<Integer> payments = new ArrayList<>();
+//				for (int j = 3; j < row.getLastCellNum() + 1; j++) {
+//					cell = row.getCell(j);
+//					if (null != cell && cell.getCellType() == CellType.NUMERIC) {
+//						int payment = (int) cell.getNumericCellValue();
+//						payments.add(payment);
+//					}
+//				}
+//				MonthlySalary monthlySalary = null;
+//				if(!payments.isEmpty()) {
+//					monthlySalary = monthlySalary.addFields(payments);
+//					log.info("================================================"+monthlySalary);
+//					monthlySalaryMapper.insert(monthlySalary);
+//					
+//					int msNo = monthlySalary.getMsNo();
+//					salaryTypechainOccupant.setMs_no(msNo);
+//					salaryTypechainOccupantMapper.insert(salaryTypechainOccupant);
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	/**
+//	 * 생성한 엑셀 워크북을 컨트롤러 에서 받게 해줌
+//	 * 
+//	 * @param list
+//	 * @return
+//	 */
+//	public SXSSFWorkbook excelFileDownloadProcess(List<Object> list) {
+//		return this.makeSimpleExcelWorkBook(list);
+//	}
 }

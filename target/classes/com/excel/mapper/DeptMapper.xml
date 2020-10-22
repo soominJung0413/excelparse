@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.excel.mapper.DeptMapper">
+	
+		<resultMap type="com.excel.domain.Dept" id="deptResult">
+			<id property="dNo" column="dno"/>
+			<result property="dName" column="dname"/>
+		</resultMap>
+	
+	<select id="selectList" resultMap="deptResult">
+		select * from dept
+	</select>
+
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="모델링erd" id="0CD3BA40-B355-A83A-6226-42334208687B" version="3.5">
+<createdBy>admin</createdBy>
+<createdTime>2020-10-21 03:36:43 UTC</createdTime>
+<ownerDesignName>모델링erd</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>0CD3BA40-B355-A83A-6226-42334208687B</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="3C9B95DF-7B1E-C4B8-CE53-EABF52C22000">
+<designStoragePath>C:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>
