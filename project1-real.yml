@@ -1,0 +1,3 @@
+server:
+  name: project1-real
+  message: REAL 서버입니다

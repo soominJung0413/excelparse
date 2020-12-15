@@ -1,0 +1,4 @@
+server:
+  name: project1-test
+  message: 테스트 서버입니다
+  message2: 수정테스트 입니다!
